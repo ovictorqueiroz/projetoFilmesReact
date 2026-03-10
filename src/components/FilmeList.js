@@ -30,7 +30,7 @@ export default function FilmeList() {
 
   return (
     <View>
-      <Text style={styles.subtitulo}>Filmes cadastrados:</Text>
+      <Text style={styles.subtitulo}>FILMES CADASTRADOS:</Text>
       {filmes.map((filme) => (
         <View key={filme.id} style={styles.card}>
           <Text style={styles.titulo}>🎬 {filme.titulo}</Text>
@@ -56,7 +56,6 @@ export default function FilmeList() {
 
 const styles = StyleSheet.create({
   subtitulo: {
-    fontFamily: 'Notable_400Regular',
     fontSize: 18,
     fontWeight: 'bold',
     color: '#FAB95B',

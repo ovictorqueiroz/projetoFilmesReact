@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useFonts, Notable_400Regular } from '@expo-google-fonts/notable';
 import { db } from '../firebaseConfig';
 import { ref, set } from 'firebase/database';
 
