@@ -11,7 +11,8 @@ CRUD web de cadastro de filmes e diretores, desenvolvido como projeto da discipl
 
 
 ### Tela de edição
-<img width="1524" height="871" alt="image" src="https://github.com/user-attachments/assets/1cd8451a-20be-4a66-b4ed-8e219439757f" />
+<img width="1518" height="873" alt="image" src="https://github.com/user-attachments/assets/40e8938c-3f5d-416d-825f-2411f3283cc8" />
+
 
 
 ---
