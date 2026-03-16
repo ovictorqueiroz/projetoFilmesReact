@@ -39,6 +39,8 @@ export default function FilmeForm() {
         value={diretor}
         onChangeText={setDiretor}
       />
+
+      <Text style={styles.label}>Ano de Estreia</Text>
       <TextInput
         style={styles.input}
         placeholder='Ex: 1977'

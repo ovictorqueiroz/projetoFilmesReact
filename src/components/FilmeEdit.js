@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { db } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig';
 import { ref, set } from 'firebase/database';
 
 export default function FilmeEdit({ filme, onClose }) {
   const [titulo, setTitulo] = useState(filme.titulo);
-  const [diretor, setDiretor] = useState(filme.diretor);
+  const [diretor, setDiretor] = useState(filme.diretor)
+  const [ano, setAno] = useState(filme.ano);
 
   function atualizarFilme() {
-    set(ref(db, 'filmes/' + filme.id), {
+    const uid = auth.currentUser.uid;
+    set(ref(db, 'filmes/' + uid + "/"+ filme.id), {
       titulo: titulo,
       diretor: diretor,
+      ano: ano
     });
     onClose();
   }
@@ -18,6 +21,7 @@ export default function FilmeEdit({ filme, onClose }) {
   return (
     <View style={styles.container}>
       <Text style={styles.subtitulo}>✏️ Editando: {filme.titulo}</Text>
+
       <Text style={styles.label}>Título</Text>
       <TextInput
         style={styles.input}
@@ -25,6 +29,7 @@ export default function FilmeEdit({ filme, onClose }) {
         placeholderTextColor="#888"
         onChangeText={setTitulo}
       />
+
       <Text style={styles.label}>Diretor</Text>
       <TextInput
         style={styles.input}
@@ -32,6 +37,15 @@ export default function FilmeEdit({ filme, onClose }) {
         placeholderTextColor="#888"
         onChangeText={setDiretor}
       />
+      <Text style={styles.label}>Ano</Text>
+
+      <TextInput
+        style = {styles.input}
+        value={ano}
+        placeholderTextColor="#888"
+        onChangeText={setAno}
+      />
+      
       <View style={styles.botoes}>
         <TouchableOpacity style={styles.botaoSalvar} onPress={atualizarFilme}>
           <Text style={styles.botaoTexto}>Salvar</Text>

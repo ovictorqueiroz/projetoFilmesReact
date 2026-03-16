@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { db } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig';
 import { ref, onValue, remove } from 'firebase/database';
 import FilmeEdit from './FilmeEdit';
 
@@ -9,7 +9,9 @@ export default function FilmeList() {
   const [filmeSelecionado, setFilmeSelecionado] = useState(null);
 
   useEffect(() => {
-    const filmesRef = ref(db, 'filmes');
+    const uid = auth.currentUser.uid;
+    const filmesRef = ref(db, 'filmes/' + uid);
+
     onValue(filmesRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -19,12 +21,16 @@ export default function FilmeList() {
         }));
         setFilmes(lista);
       }
+      else{
+        setFilmes([])
+      }
     });
   }, []);
 
   function deletarFilme(id, titulo) {
+    const uid = auth.currentUser.uid;
   if (window.confirm(`Tem certeza que deseja excluir "${titulo}"?`)) {
-    remove(ref(db, 'filmes/' + id));
+    remove(ref(db, 'filmes/' + uid + "/" + id));
   }
 }
 
@@ -35,6 +41,7 @@ export default function FilmeList() {
         <View key={filme.id} style={styles.card}>
           <Text style={styles.titulo}>🎬 {filme.titulo}</Text>
           <Text style={styles.diretor}>🎥 {filme.diretor}</Text>
+          <Text style={styles.ano}>📆 {filme.ano}</Text>
           <View style={styles.botoes}>  
             <TouchableOpacity style={styles.botaoEditar} onPress={() => setFilmeSelecionado(filme)}>
               <Text style={styles.botaoTexto}>Editar</Text>
@@ -80,6 +87,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 10,
   },
+
+  ano:{
+    color: '#aaa',
+    fontSize: 14,
+    marginBottom: 10,
+  },
+
   botoes: {
     flexDirection: 'row',
     gap: 8,
