@@ -2,18 +2,23 @@ import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { db } from '../firebaseConfig';
 import { ref, push } from 'firebase/database';
+import { auth } from '../firebaseConfig';
 
 export default function FilmeForm() {
   const [titulo, setTitulo] = useState('');
   const [diretor, setDiretor] = useState('');
+  const [ano, setAno] = useState('');
 
   function salvarFilme() {
-    push(ref(db, 'filmes'), {
+    const uid = auth.currentUser.uid;
+    push(ref(db, 'filmes/' + uid), {
       titulo: titulo,
       diretor: diretor,
+      ano: ano
     });
     setTitulo('');
     setDiretor('');
+    setAno('')
   }
 
   return (
@@ -33,6 +38,14 @@ export default function FilmeForm() {
         placeholderTextColor="#888"
         value={diretor}
         onChangeText={setDiretor}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder='Ex: 1977'
+        placeholderTextColor="#888"
+        value={ano}
+        onChangeText={setAno}
+
       />
       <TouchableOpacity style={styles.botao} onPress={salvarFilme}>
         <Text style={styles.botaoTexto}>🎬 Salvar Filme</Text>
