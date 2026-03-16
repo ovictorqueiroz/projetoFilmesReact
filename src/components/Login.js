@@ -32,7 +32,7 @@ export default function Login() {
     <View style={styles.container}>
       <Text style={styles.titulo}>🎬 LISTA DE FILMES 🍿</Text>
       <Text style={styles.subtitulo}>{isCadastro ? 'Criar conta' : 'Entrar'}</Text>
-
+    
       {isCadastro && (
         <TextInput
           style={styles.input}
