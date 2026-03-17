@@ -26,7 +26,7 @@ export default function App() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.titulo}>🎬 Lista de filmes de {usuario.displayName} 🍿</Text>
+      <Text style={styles.titulo}>🎬 Lista de Filmes de {usuario.displayName} 🍿</Text>
       <TouchableOpacity style={styles.botaoLogout} onPress={() => signOut(auth)}>
         <Text style={styles.botaoLogoutTexto}>Sair</Text>
       </TouchableOpacity>

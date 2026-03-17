@@ -10,19 +10,34 @@ export default function Login() {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
 
+  function testaSenha(senha) {
+    if (senha.trim().length < 8) return 'A senha deve conter pelo menos 8 caracteres.';
+    if (!/[a-z]/.test(senha)) return 'A senha deve conter pelo menos uma minúscula.';
+    if (!/[A-Z]/.test(senha)) return 'A senha deve conter pelo menos uma maiúscula.';
+    if (!/[0-9]/.test(senha)) return 'A senha deve conter pelo menos um número';
+    if (!/[!@#$%&*]/.test(senha)) return 'A senha deve conter pelo menos um caracter especial';
+    return null; // senha válida
+}
+
   async function cadastrar() {
-    try {
-      const resultado = await createUserWithEmailAndPassword(auth, email, senha);
-      await updateProfile(resultado.user, { displayName: nome });
-      await resultado.user.reload();
-    } catch (e) {
-      setErro('Erro ao cadastrar. Verifique os dados.');
-    }
+  const erroSenha = testaSenha(senha);
+  if (erroSenha) {
+    setErro(erroSenha);
+    return;
   }
+  try {
+    const resultado = await createUserWithEmailAndPassword(auth, email, senha);
+    await updateProfile(resultado.user, { displayName: nome });
+    window.location.reload();
+  } catch (e) {
+    setErro('Erro ao cadastrar. Verifique os dados.');
+  }
+}
 
   async function entrar() {
     try {
       await signInWithEmailAndPassword(auth, email, senha);
+      
     } catch (e) {
       setErro('Email ou senha inválidos.');
     }
@@ -32,7 +47,7 @@ export default function Login() {
     <View style={styles.container}>
       <Text style={styles.titulo}>🎬 LISTA DE FILMES 🍿</Text>
       <Text style={styles.subtitulo}>{isCadastro ? 'Criar conta' : 'Entrar'}</Text>
-    
+
       {isCadastro && (
         <TextInput
           style={styles.input}
@@ -51,7 +66,7 @@ export default function Login() {
         onChangeText={setEmail}
       />
       <TextInput
-        style={styles.input}
+        style={styles.input}  
         placeholder="Senha"
         placeholderTextColor="#888"
         value={senha}
