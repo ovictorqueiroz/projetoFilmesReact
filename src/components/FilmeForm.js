@@ -8,17 +8,21 @@ export default function FilmeForm() {
   const [titulo, setTitulo] = useState('');
   const [diretor, setDiretor] = useState('');
   const [ano, setAno] = useState('');
+  const [assistido, setAssistido] = useState(false)
+  ;
 
   function salvarFilme() {
     const uid = auth.currentUser.uid;
     push(ref(db, 'filmes/' + uid), {
       titulo: titulo,
       diretor: diretor,
-      ano: ano
+      ano: ano,
+      assistido: assistido
     });
     setTitulo('');
     setDiretor('');
-    setAno('')
+    setAno('');
+    setAssistido(false);
   }
 
   return (

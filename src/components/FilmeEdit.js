@@ -10,7 +10,7 @@ export default function FilmeEdit({ filme, onClose }) {
 
   function atualizarFilme() {
     const uid = auth.currentUser.uid;
-    set(ref(db, 'filmes/' + uid + "/"+ filme.id), {
+    set(ref(db, 'filmes/' + uid + "/" + filme.id), {
       titulo: titulo,
       diretor: diretor,
       ano: ano
@@ -40,12 +40,12 @@ export default function FilmeEdit({ filme, onClose }) {
       <Text style={styles.label}>Ano</Text>
 
       <TextInput
-        style = {styles.input}
+        style={styles.input}
         value={ano}
         placeholderTextColor="#888"
         onChangeText={setAno}
       />
-      
+
       <View style={styles.botoes}>
         <TouchableOpacity style={styles.botaoSalvar} onPress={atualizarFilme}>
           <Text style={styles.botaoTexto}>Salvar</Text>
@@ -91,12 +91,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
-  botaoSalvar: {
-    backgroundColor: '#FAB95B',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 4,
-  },
   botaoCancelar: {
     backgroundColor: '#c0392b',
     paddingVertical: 8,
@@ -108,4 +102,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 13,
   },
+  botaoSalvar: {
+    backgroundColor: '#FAB95B',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+  },
+ 
 });
