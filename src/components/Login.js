@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitulo: {
-    fontSize: 20,
-    color: '#fff',
+    fontSize: 30,
+    color: '#FAB95B',
     textAlign: 'center',
     marginBottom: 24,
   },
