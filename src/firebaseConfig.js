@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database"
 import { getAuth } from "firebase/auth"
+import { getStorage } from "firebase/storage"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -16,12 +17,14 @@ const firebaseConfig = {
   storageBucket: "projeto-react-firebase-a67d1.firebasestorage.app",
   messagingSenderId: "469079499593",
   appId: "1:469079499593:web:2f1deef6d573841a72b098",
-  measurementId: "G-CDJWG8S391"
+  measurementId: "G-CDJWG8S391",
+  
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app)
+const storage = getStorage(app)
 
-export {db, auth};
+export {db, auth, storage};
