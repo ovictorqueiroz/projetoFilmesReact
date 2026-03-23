@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { db } from '../firebaseConfig';
-import { ref, push } from 'firebase/database';
-import { auth } from '../firebaseConfig';
+import { db, auth, storage } from '../firebaseConfig';
+import { ref, push, update } from 'firebase/database';
+import { ref as storageRef, uploadBytes, getDownloadURL} from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';       
 
 export default function FilmeForm() {
   const [titulo, setTitulo] = useState('');
   const [diretor, setDiretor] = useState('');
   const [ano, setAno] = useState('');
   const [assistido, setAssistido] = useState(false)
+  
   ;
-
+  
   function salvarFilme() {
     const uid = auth.currentUser.uid;
     push(ref(db, 'filmes/' + uid), {
@@ -23,6 +25,14 @@ export default function FilmeForm() {
     setDiretor('');
     setAno('');
     setAssistido(false);
+  }
+  
+  async function carregarPoster(){
+    const uid = auth.currentUser.uid;
+    const imgInput = await ImagePicker.launchImageLibraryAsync()
+    const posterRef = storageRef(storage, ('posters/'+ uid)};
+    update(posterRef)
+
   }
 
   return (
@@ -53,9 +63,17 @@ export default function FilmeForm() {
         onChangeText={setAno}
 
       />
-      <TouchableOpacity style={styles.botao} onPress={salvarFilme}>
-        <Text style={styles.botaoTexto}>🎬 Salvar Filme</Text>
-      </TouchableOpacity>
+
+      <View style={styles.botoes}>
+        <TouchableOpacity style={styles.botaoSalvar}>
+          <Text style={styles.botaoTexto}>⬆ Carregar pôster</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.botaoSalvar} onPress={salvarFilme}>
+          <Text style={styles.botaoTexto}>🎬 Salvar Filme</Text>
+        </TouchableOpacity>
+
+      </View>
     </View>
   );
 }
@@ -83,17 +101,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#444',
   },
-  botao: {
+
+  botoes:{
+    flexDirection:'row',
+    gap:8
+  },
+
+  botaoSalvar: {
     backgroundColor: '#FAB95B',
     padding: 12,
     borderRadius: 6,
     alignItems: 'center',
-    width: 150
-    ,
+    width: 150,
   },
   botaoTexto: {
     color: '#1a1a2e',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 15
   },
 });
