@@ -3,6 +3,8 @@
 CRUD web de cadastro de filmes e diretores, desenvolvido como projeto da disciplina de **Programação Web III**.
 
 ---
+## Versão Atual: 1.3.0
+---
 
 ## 🖥️ Screenshots
 
@@ -36,6 +38,13 @@ CRUD web de cadastro de filmes e diretores, desenvolvido como projeto da discipl
 | **Update** | Edição de título e diretor de um filme existente |
 | **Delete** | Exclusão de filme com confirmação antes de deletar |
 
+---
+## Histórico de Versões
+| Versão | Descrição
+| 1.0.0 | CRUD Inicial e Deploy (Firebase Realtime Database + Firebase Hosting) | 
+| 1.1.0 | Autenticação de Usuários | 
+| 1.2.0 | Feature de 'Já assisti/Ainda não assisti'|
+| 1.3.0 | Armazenamento de Imagens (Firebase Storage) | 
 ---
 
 ## 🌐 Acesse o projeto
