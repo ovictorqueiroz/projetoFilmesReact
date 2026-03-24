@@ -2,36 +2,56 @@ import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { db, auth, storage } from '../firebaseConfig';
 import { ref, push, update } from 'firebase/database';
-import { ref as storageRef, uploadBytes, getDownloadURL} from 'firebase/storage';
-import * as ImagePicker from 'expo-image-picker';       
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function FilmeForm() {
   const [titulo, setTitulo] = useState('');
   const [diretor, setDiretor] = useState('');
   const [ano, setAno] = useState('');
-  const [assistido, setAssistido] = useState(false)
-  
-  ;
-  
+  const [assistido, setAssistido] = useState(false);
+  const [poster, setPoster] = useState('');
+
+    ;
+
   function salvarFilme() {
     const uid = auth.currentUser.uid;
     push(ref(db, 'filmes/' + uid), {
       titulo: titulo,
       diretor: diretor,
       ano: ano,
-      assistido: assistido
+      assistido: assistido,
+      poster: poster
     });
     setTitulo('');
     setDiretor('');
     setAno('');
     setAssistido(false);
+    setPoster('')
   }
-  
-  async function carregarPoster(){
+
+  async function carregarPoster() {
     const uid = auth.currentUser.uid;
-    const imgInput = await ImagePicker.launchImageLibraryAsync()
-    const posterRef = storageRef(storage, ('posters/'+ uid)};
-    update(posterRef)
+    const imgInput = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+      quality: 0.7
+    })
+
+    if (!imgInput.canceled) {
+      console.log(imgInput);
+      const posterRef = storageRef(storage, 'posters/' + uid + '/' + titulo);
+      const imgBlob = await fetch(imgInput.assets[0].uri).then(r => r.blob());
+
+      uploadBytes(posterRef, imgBlob).then(snapshot => {
+        console.log('Imagem carregada!');
+        getDownloadURL(snapshot.ref).then(url => {
+          setPoster(url);
+        }); 
+      });
+    } else {
+      alert('Você não selecionou uma imagem!')
+    }
 
   }
 
@@ -66,7 +86,7 @@ export default function FilmeForm() {
 
       <View style={styles.botoes}>
         <TouchableOpacity style={styles.botaoSalvar}>
-          <Text style={styles.botaoTexto}>⬆ Carregar pôster</Text>
+          <Text style={styles.botaoTexto} onPress={carregarPoster}>⬆ Carregar pôster</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.botaoSalvar} onPress={salvarFilme}>
@@ -102,9 +122,9 @@ const styles = StyleSheet.create({
     borderColor: '#444',
   },
 
-  botoes:{
-    flexDirection:'row',
-    gap:8
+  botoes: {
+    flexDirection: 'row',
+    gap: 8
   },
 
   botaoSalvar: {
