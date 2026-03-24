@@ -1,21 +1,52 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { db, auth } from '../firebaseConfig';
+import { db, auth, storage } from '../firebaseConfig';
 import { ref, set } from 'firebase/database';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function FilmeEdit({ filme, onClose }) {
   const [titulo, setTitulo] = useState(filme.titulo);
   const [diretor, setDiretor] = useState(filme.diretor)
   const [ano, setAno] = useState(filme.ano);
+  const [poster, setPoster] = useState(filme.poster);
 
   function atualizarFilme() {
     const uid = auth.currentUser.uid;
     set(ref(db, 'filmes/' + uid + "/" + filme.id), {
       titulo: titulo,
       diretor: diretor,
-      ano: ano
+      ano: ano,
+      poster: poster
     });
     onClose();
+  }
+
+  async function atualizaPoster() {
+    const uid = auth.currentUser.uid;
+    const imgInput = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+      quality: 0.7
+    })
+
+    if (!imgInput.canceled) {
+      console.log(imgInput);
+      const posterRef = storageRef(storage, 'posters/' + uid + '/' + titulo);
+      const imgBlob = await fetch(imgInput.assets[0].uri).then(r => r.blob());
+
+      uploadBytes(posterRef, imgBlob).then(snapshot => {
+        console.log('Imagem carregada!');
+        getDownloadURL(snapshot.ref).then(url => {
+          setPoster(url);
+          alert('Pôster carregado com sucesso!')
+        });
+      });
+
+    } else {
+      alert('Você não selecionou uma imagem!')
+    }
+
   }
 
   return (
@@ -47,12 +78,19 @@ export default function FilmeEdit({ filme, onClose }) {
       />
 
       <View style={styles.botoes}>
+
+        <TouchableOpacity style={styles.botaoSalvar} onPress={atualizaPoster}>
+          <Text style={styles.botaoTexto}>Carregar Poster</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.botaoSalvar} onPress={atualizarFilme}>
           <Text style={styles.botaoTexto}>Salvar</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.botaoCancelar} onPress={onClose}>
           <Text style={styles.botaoTexto}>Cancelar</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -108,5 +146,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 4,
   },
- 
+
 });

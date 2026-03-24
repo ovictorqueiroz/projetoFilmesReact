@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { db, auth } from '../firebaseConfig';
 import { update, ref, onValue, remove } from 'firebase/database';
 import FilmeEdit from './FilmeEdit';
@@ -50,6 +50,8 @@ export default function FilmeList() {
           <Text style={[styles.titulo, filme.assistido && styles.tituloAssistido]}> 🎞️ {filme.titulo} | {filme.ano} </Text>
 
           <Text style={[styles.diretor, filme.assistido && styles.diretorAssistido]}>🎬 {filme.diretor}</Text>
+
+          {filme.poster ? <Image style={styles.img} source={{uri: filme.poster}} /> : null}
 
           <View style={styles.botoes}>
             <TouchableOpacity style={styles.botaoEditar} onPress={() => setFilmeSelecionado(filme)}>
@@ -148,5 +150,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 4,
 
+  },
+
+  img:{
+    height: 140,
+    width: 100,
+    margin: 8
   },
 });

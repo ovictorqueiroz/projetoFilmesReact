@@ -27,7 +27,7 @@ export default function FilmeForm() {
     setDiretor('');
     setAno('');
     setAssistido(false);
-    setPoster('')
+    setPoster(url)
   }
 
   async function carregarPoster() {
@@ -49,6 +49,8 @@ export default function FilmeForm() {
           setPoster(url);
         }); 
       });
+
+      alert('Imagem carregada com sucesso!')
     } else {
       alert('Você não selecionou uma imagem!')
     }
