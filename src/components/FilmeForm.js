@@ -4,7 +4,7 @@ import { db, auth, storage } from '../firebaseConfig';
 import { ref, push, update } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import useFeatureFlag from '../hooks/useFeatureFlag'; 
+import useFeatureFlag from '../hooks/useFeatureFlags'; 
 
 export default function FilmeForm() {
   const [titulo, setTitulo] = useState('');
