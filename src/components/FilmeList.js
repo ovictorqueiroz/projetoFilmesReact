@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-na
 import { db, auth } from '../firebaseConfig';
 import { update, ref, onValue, remove } from 'firebase/database';
 import FilmeEdit from './FilmeEdit';
+import useUploadAtivo from '../hooks/useFeatureFlags'; 
 
 export default function FilmeList() {
+  const uploadAtivo = useUploadAtivo('uploadPoster');
+
   const [filmes, setFilmes] = useState([]);
   const [filmeSelecionado, setFilmeSelecionado] = useState(null);
 
@@ -51,7 +54,7 @@ export default function FilmeList() {
 
           <Text style={[styles.diretor, filme.assistido && styles.diretorAssistido]}>🎬 {filme.diretor}</Text>
 
-          {filme.poster ? <Image style={styles.img} source={{uri: filme.poster}} /> : null}
+          {uploadAtivo && (filme.poster ? <Image style={styles.img} source={{uri: filme.poster}} /> : null)}
 
           <View style={styles.botoes}>
             <TouchableOpacity style={styles.botaoEditar} onPress={() => setFilmeSelecionado(filme)}>

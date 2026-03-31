@@ -3,7 +3,7 @@ import{ref,onValue} from "firebase/database";
 import { db } from '../firebaseConfig';
 
 
-function useFeatureFlag(flagName){
+function useUploadAtivo(flagName){
     const[valor, setValor] = useState(null); //constante para armazenar o boolean que está no banco
     useEffect(()=>{ //usado pra disparar
         const flagRef = ref(db, 'featureFlags/' + flagName); //endereço do banco
@@ -17,4 +17,4 @@ function useFeatureFlag(flagName){
 return valor; //retorna para a função o valor booleano que está dentro do banco
 }
 
-export default useFeatureFlag;
+export default useUploadAtivo;

@@ -4,7 +4,7 @@ import { db, auth, storage } from '../firebaseConfig';
 import { ref, push, update } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import useFeatureFlag from '../hooks/useFeatureFlags'; 
+import useUploadAtivo from '../hooks/useFeatureFlags'; 
 
 export default function FilmeForm() {
   const [titulo, setTitulo] = useState('');
@@ -13,7 +13,7 @@ export default function FilmeForm() {
   const [assistido, setAssistido] = useState(false);
   const [poster, setPoster] = useState('');
 
-  const uploadAtivo = useFeatureFlag('uploadPoster');
+  const uploadAtivo = useUploadAtivo('uploadPoster');
 
   function salvarFilme() {
     const uid = auth.currentUser.uid;
