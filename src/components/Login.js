@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { auth } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 export default function Login() {
@@ -27,6 +27,12 @@ export default function Login() {
   }
   try {
     const resultado = await createUserWithEmailAndPassword(auth, email, senha);
+  
+    await set(ref(db, 'usuarios/' + resultado.user.uid + '/'), {
+      nome: nome,
+      email: email,
+      isAdmin: false
+    })
     await updateProfile(resultado.user, { displayName: nome });
     window.location.reload();
   } catch (e) {
