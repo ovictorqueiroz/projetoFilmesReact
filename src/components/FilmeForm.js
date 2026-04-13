@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { db, auth, storage } from '../firebaseConfig';
-import { ref, push, update } from 'firebase/database';
+import { ref, push } from 'firebase/database';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
-import useUploadAtivo from '../hooks/useFeatureFlags'; 
+import useUploadAtivo from '../hooks/useFeatureFlags';
 
 export default function FilmeForm() {
   const [titulo, setTitulo] = useState('');
@@ -15,47 +15,44 @@ export default function FilmeForm() {
 
   const uploadAtivo = useUploadAtivo('uploadPoster');
 
-  function salvarFilme() {
+  function salvarFilme(urlPoster = poster) {
     const uid = auth.currentUser.uid;
     push(ref(db, 'filmes/' + uid), {
       titulo: titulo,
       diretor: diretor,
       ano: ano,
       assistido: assistido,
-      poster: poster
+      poster: urlPoster
     });
     setTitulo('');
     setDiretor('');
     setAno('');
     setAssistido(false);
-    setPoster(url)
+    setPoster('');
   }
 
-  async function carregarPoster() {
+  async function carregarPosterESalvar() {
     const uid = auth.currentUser.uid;
     const imgInput = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: false,
       quality: 0.7
-    })
+    });
 
     if (!imgInput.canceled) {
-      console.log(imgInput);
       const posterRef = storageRef(storage, 'posters/' + uid + '/' + titulo);
       const imgBlob = await fetch(imgInput.assets[0].uri).then(r => r.blob());
 
       uploadBytes(posterRef, imgBlob).then(snapshot => {
-        console.log('Imagem carregada!');
         getDownloadURL(snapshot.ref).then(url => {
           setPoster(url);
-        }); 
+          salvarFilme(url); // salva já com a URL correta
+          alert('Filme salvo com pôster!');
+        });
       });
-
-      alert('Imagem carregada com sucesso!')
     } else {
-      alert('Você não selecionou uma imagem!')
+      alert('Você não selecionou uma imagem!');
     }
-
   }
 
   return (
@@ -84,20 +81,18 @@ export default function FilmeForm() {
         placeholderTextColor="#888"
         value={ano}
         onChangeText={setAno}
-
       />
 
       <View style={styles.botoes}>
-        {uploadAtivo &&
-        (<TouchableOpacity style={styles.botaoSalvar} onPress={carregarPoster}>
-          <Text style={styles.botaoTexto}>⬆ Carregar pôster</Text>
-        </TouchableOpacity>)
-        }
+        {uploadAtivo && (
+          <TouchableOpacity style={styles.botaoSalvar} onPress={carregarPosterESalvar}>
+            <Text style={styles.botaoTexto}>⬆ Carregar pôster</Text>
+          </TouchableOpacity>
+        )}
 
-        <TouchableOpacity style={styles.botaoSalvar} onPress={salvarFilme}>
+        <TouchableOpacity style={styles.botaoSalvar} onPress={() => salvarFilme()}>
           <Text style={styles.botaoTexto}>🎬 Salvar Filme</Text>
         </TouchableOpacity>
-
       </View>
     </View>
   );
@@ -126,12 +121,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#444',
   },
-
   botoes: {
     flexDirection: 'row',
     gap: 8
   },
-
   botaoSalvar: {
     backgroundColor: '#FAB95B',
     padding: 12,
